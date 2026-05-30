@@ -3,3 +3,6 @@
 
 # MIDI files
 *.mid
+
+# Metadata files
+*.h5

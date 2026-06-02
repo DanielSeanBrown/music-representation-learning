@@ -1,5 +1,4 @@
 from pathlib import Path
-
 import h5py
 from tqdm import tqdm
 import pandas as pd
@@ -18,11 +17,13 @@ def extract_h5_metadata(h5_path) -> dict:
             "title": song["title"].decode("utf-8"),
             "song_id": song["song_id"].decode("utf-8"),
             "release": song["release"].decode("utf-8"),
+            "genre": song["genre"].decode("utf-8"),
             "midi_path": midi_path
         }
 
 if __name__ == "__main__":
     files = list(Path("data/midi_metadata").rglob("*.h5"))
     metadata = [extract_h5_metadata(f) for f in tqdm(files)]
+    print(f"Extracted metadata for {len(metadata)} files.")
     df = pd.DataFrame(metadata)
     df.to_csv("data/metadata_index.csv", index=False)

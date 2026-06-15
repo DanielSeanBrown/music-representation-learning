@@ -7,7 +7,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_ROOT / "data"
 
 # Lakh MIDI
-LMD_MATCHED_DIR = DATA_DIR / "lmd_matched"
+LMD_MATCHED_DIR = DATA_DIR / "midi_files"
 
 # MSD metadata
-MSD_METADATA_DIR = DATA_DIR / "lmd_matched_h5"
+MSD_METADATA_DIR = DATA_DIR / "midi_metadata"
+
+# Processed Data
+PROCESSED_DATA_DIR = DATA_DIR / "processed"
+
+# Notebook datasets
+NOTEBOOK_DATASETS_DIR = PROJECT_ROOT / "notebooks" / "notebook_datasets"

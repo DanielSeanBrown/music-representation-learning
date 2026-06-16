@@ -1,4 +1,5 @@
 from pathlib import Path
+from src.config.paths import MSD_METADATA_DIR, PROCESSED_DATA_DIR
 import h5py
 from tqdm import tqdm
 import pandas as pd
@@ -22,8 +23,8 @@ def extract_h5_metadata(h5_path) -> dict:
         }
 
 if __name__ == "__main__":
-    files = list(Path("data/midi_metadata").rglob("*.h5"))
+    files = list(Path(MSD_METADATA_DIR).rglob("*.h5"))
     metadata = [extract_h5_metadata(f) for f in tqdm(files)]
     print(f"Extracted metadata for {len(metadata)} files.")
     df = pd.DataFrame(metadata)
-    df.to_csv("data/metadata_index.csv", index=False)
+    df.to_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv", index=False)

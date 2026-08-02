@@ -2,6 +2,7 @@ from collections import Counter
 from pathlib import Path
 from collections import defaultdict
 
+import faiss
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import StandardScaler
 
@@ -108,16 +109,35 @@ def produce_embeddings(features_df: pd.DataFrame) -> pd.DataFrame:
 
     return pd.DataFrame(X, index=features_df.index)
 
+def produce_FAISS_index(embeddings: np.ndarray) -> "faiss.Index":
+    """
+    Produce a FAISS index for the given embeddings.
+
+    Args:
+        embeddings (np.ndarray): The input embeddings."""
+    
+
+    d = embeddings.shape[1]
+    index = faiss.IndexFlatIP(d)
+    index.add(embeddings)
+
+    return index
+
 
 
 
 if __name__ == "__main__":
     LIMIT = 15
+    metadata_df = pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv")
+    if "faiss_id" not in metadata_df.columns:
+        metadata_df["faiss_id"] = metadata_df.index
+        metadata_df.to_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv", index=False)
     if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{LIMIT}.pkl").exists():
-        metadata_df = pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv")
         features_df = perform_extraction(metadata_df, limit=LIMIT, save=True)
     features_df = load_dataset(f"simmilarity_features_{LIMIT}.pkl")
     embeddings_df = produce_embeddings(features_df)
     np.save(file=f"{PROCESSED_DATA_DIR}/all_features_limit_{LIMIT}_embeddings", arr=embeddings_df)
+    index = produce_FAISS_index(embeddings_df.values)
+    faiss.write_index(index, f"{PROCESSED_DATA_DIR}/all_features_limit_{LIMIT}_index.index")
 
     print(embeddings_df.head())

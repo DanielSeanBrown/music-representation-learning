@@ -1,7 +1,7 @@
 import faiss
 from loguru import logger
 
-from src.feature_extraction import perform_extraction
+from src.feature_extraction import extract_features
 from src import download
 from src.embeddings import produce_FAISS_index, produce_embeddings
 from src.config.paths import PROCESSED_DATA_DIR
@@ -38,23 +38,19 @@ def main(
 
     if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{limit}.pkl").exists() or force_extraction:
         logger.info("Extracting features from MIDI files...")
-        perform_extraction(metadata_df=pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv"), limit=limit, save=True)
+        extract_features(metadata_df=pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv"), limit=limit, save=True)
 
     if not Path(PROCESSED_DATA_DIR / f"all_features_limit_{limit}_embeddings.npy").exists() or force_embedding:
         logger.info("Producing embeddings from extracted features...")
-        embeddings_df = produce_embeddings(features_df)
+        produce_embeddings(limit=limit, save=True)
 
     if not Path(PROCESSED_DATA_DIR / f"all_features_limit_{limit}_index.index").exists() or force_embedding:
-        if features_df is None:
-            features_df = pd.read_pickle(f"{PROCESSED_DATA_DIR}/simmilarity_features_{limit}.pkl")
         logger.info("Producing FAISS index from embeddings...")
-        embeddings_df = produce_embeddings(features_df)
-        index = produce_FAISS_index(embeddings_df.values)
-        faiss.write_index(index, f"{PROCESSED_DATA_DIR}/all_features_limit_{limit}_index.index")
+        produce_FAISS_index(limit=limit, save=True)
 
     pass
 
 
 if __name__ == "__main__":
 
-    main(limit = 20)
+    main(force_download=False, force_extraction=True, force_embedding=True, limit=20)

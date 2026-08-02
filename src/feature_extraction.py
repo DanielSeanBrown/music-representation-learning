@@ -5,6 +5,7 @@ from collections import defaultdict
 
 import pandas as pd
 from tqdm import tqdm
+from loguru import logger
 
 from src.config.paths import PROCESSED_DATA_DIR
 from src.features.basic import extract_basic_features
@@ -165,7 +166,7 @@ def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
         "melody": unpack(melody_notes)
     }
 
-def extract_features_for_song(midi_path: str) -> dict:
+def perform_extraction_for_file(midi_path: str) -> dict:
     """Given the path to a directory containing MIDI files, extract a comprehensive set of musical features."""
 
     song = load_song_data(midi_path) # Perform preprocessing of song data
@@ -182,14 +183,14 @@ def extract_features_for_song(midi_path: str) -> dict:
         **extract_entropy_features(song),
     }
 
-def perform_extraction(metadata_df: pd.DataFrame, extraction_func: callable=extract_features_for_song, limit: int = 10, save: bool = False) -> pd.DataFrame:
+def extract_features(metadata_df: pd.DataFrame, extraction_func: callable=perform_extraction_for_file, limit: int = 10, save: bool = True) -> pd.DataFrame:
 
     """Extract features using the provided function for MIDI files listed in the metadata DataFrame. 
     Args:
         metadata_df (pd.DataFrame): DataFrame containing metadata about the MIDI files, including paths.
         extraction_func (callable): Function that takes a MIDI file path and returns a dictionary of extracted features.
         limit (int, optional): Maximum number of rows to process for testing. Defaults to 10.
-        save (bool, optional): Whether to save the extracted features to a CSV file. Defaults to False."""
+        save (bool, optional): Whether to save the extracted features to a pickle file. Defaults to True."""
 
     rows = []
 
@@ -203,14 +204,20 @@ def perform_extraction(metadata_df: pd.DataFrame, extraction_func: callable=extr
                 features["artist"] = row["artist_name"]
                 features["title"] = row["title"]
                 rows.append(features)
+    features_df = pd.DataFrame(rows)
     if save:
-        features_df = pd.DataFrame(rows)
         features_df.to_pickle(f"{PROCESSED_DATA_DIR}/simmilarity_features_{limit}.pkl")
 
     return pd.DataFrame(rows)
 
 if __name__ == "__main__":
+
+    # Check if the metadata file exists
+    if not Path(PROCESSED_DATA_DIR / "metadata_index.csv").exists():
+        logger.error(f"Metadata file not found at {PROCESSED_DATA_DIR}/metadata_index.csv. Please ensure the metadata file exists before running feature extraction.")
+        exit(1)
+
     metadata_df = pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv")
-    print("Extracting features for the first 10 rows of metadata...")
-    features_df = perform_extraction(metadata_df, limit=10, save=True)
-    print(features_df.head())
+    logger.info("Extracting features for the first 30 rows of metadata...")
+    features_df = extract_features(metadata_df, limit=30, save=True)
+    logger.info(features_df.head())

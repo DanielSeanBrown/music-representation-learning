@@ -11,9 +11,11 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from loguru import logger
+
 
 from src.config.paths import PROCESSED_DATA_DIR
-from src.feature_extraction import extract_features_for_song, perform_extraction
+from src.feature_extraction import extract_features
 
 
 
@@ -81,13 +83,17 @@ def build_embedding(row, ngram_vocab):
 
     return np.concatenate(parts)
 
-def produce_embeddings(features_df: pd.DataFrame) -> pd.DataFrame:
+def produce_embeddings(features_df: pd.DataFrame=None, limit: int = 30, save: bool = True) -> pd.DataFrame:
     """
     Produce embeddings for the given DataFrame.
 
     Args:
-        features_df (pd.DataFrame): The input DataFrame containing features."""
-    
+        features_df (pd.DataFrame): The input DataFrame containing features, if left empty, it will be loaded from the pickle file.
+        limit (int): The limit for the number of features to consider.
+        save (bool): Whether to save the embeddings to a numpy file. Defaults to True."""
+
+    if features_df is None:
+        features_df = load_dataset(f"simmilarity_features_{limit}.pkl")
 
     global_vocab = Counter()
     for ngrams in features_df["melody_ngrams"]:
@@ -107,19 +113,29 @@ def produce_embeddings(features_df: pd.DataFrame) -> pd.DataFrame:
 
     X = StandardScaler().fit_transform(X)
 
+    if save:
+        np.save(f"{PROCESSED_DATA_DIR}/all_features_limit_{limit}_embeddings.npy", X)
+
     return pd.DataFrame(X, index=features_df.index)
 
-def produce_FAISS_index(embeddings: np.ndarray) -> "faiss.Index":
+def produce_FAISS_index(embeddings: np.ndarray=None, limit: int = 30, save: bool = True) -> "faiss.Index":
     """
     Produce a FAISS index for the given embeddings.
 
     Args:
         embeddings (np.ndarray): The input embeddings."""
     
+    if embeddings is None:
+        embeddings = np.load(f"{PROCESSED_DATA_DIR}/all_features_limit_{limit}_embeddings.npy")
 
+    embeddings = embeddings.astype("float32")
+    faiss.normalize_L2(embeddings) 
     d = embeddings.shape[1]
     index = faiss.IndexFlatIP(d)
     index.add(embeddings)
+
+    if save:
+        faiss.write_index(index, f"{PROCESSED_DATA_DIR}/all_features_limit_{limit}_index.index")
 
     return index
 
@@ -127,17 +143,16 @@ def produce_FAISS_index(embeddings: np.ndarray) -> "faiss.Index":
 
 
 if __name__ == "__main__":
-    LIMIT = 15
+    LIMIT = 30
     metadata_df = pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv")
     if "faiss_id" not in metadata_df.columns:
         metadata_df["faiss_id"] = metadata_df.index
         metadata_df.to_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv", index=False)
     if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{LIMIT}.pkl").exists():
-        features_df = perform_extraction(metadata_df, limit=LIMIT, save=True)
+        features_df = extract_features(metadata_df, limit=LIMIT, save=True)
     features_df = load_dataset(f"simmilarity_features_{LIMIT}.pkl")
-    embeddings_df = produce_embeddings(features_df)
-    np.save(file=f"{PROCESSED_DATA_DIR}/all_features_limit_{LIMIT}_embeddings", arr=embeddings_df)
-    index = produce_FAISS_index(embeddings_df.values)
+    embeddings_df = produce_embeddings(features_df, limit=LIMIT, save=True)
+    index = produce_FAISS_index(embeddings_df.values, limit=LIMIT, save=True)
     faiss.write_index(index, f"{PROCESSED_DATA_DIR}/all_features_limit_{LIMIT}_index.index")
 
-    print(embeddings_df.head())
+    logger.info(embeddings_df.head())

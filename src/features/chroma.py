@@ -1,9 +1,8 @@
 import numpy as np
 
-def estimate_key(chroma: np.ndarray) -> tuple[str, float]:
-    """Given a 12D chroma vector, estimate the key using a simple Krumhansl-Schmuckler-style correlation method."""
+def estimate_key(chroma: np.ndarray) -> tuple[str, list[float, float], float]:
+    """Given a 12D chroma vector, estimate the key and return cyclical key encoding."""
 
-    # Define the major and minor key profiles based on Krumhansl & Kessler (1982)
     major_profile = np.array([6.35,2.23,3.48,2.33,4.38,4.09,
                               2.52,5.19,2.39,3.66,2.29,2.88])
 
@@ -29,7 +28,36 @@ def estimate_key(chroma: np.ndarray) -> tuple[str, float]:
             best_score = minor_score
             best_key = keys[i] + " minor"
 
-    return best_key, best_score
+
+    # Extract pitch class from key string
+    key_name = best_key.split()[0]
+
+    key_map = {
+        "C": 0,
+        "C#": 1,
+        "D": 2,
+        "D#": 3,
+        "E": 4,
+        "F": 5,
+        "F#": 6,
+        "G": 7,
+        "G#": 8,
+        "A": 9,
+        "A#": 10,
+        "B": 11
+    }
+
+    key_number = key_map[key_name]
+
+    # cyclical encoding of key (0-11) into 2D vector
+    theta = 2 * np.pi * key_number / 12
+
+    key_distance = np.array([
+        np.cos(theta),
+        np.sin(theta)
+    ]).tolist()
+
+    return best_key, key_distance, best_score
 
 def normalise(x: np.ndarray) -> np.ndarray:
     """Normalise a vector to sum to 1."""
@@ -56,6 +84,7 @@ def extract_chroma_features(song: dict) -> dict:
         high_chroma: 12D chroma vector for high pitches
         total_chroma: 12D chroma vector for all pitches
         key: Estimated key of the song
+        key_distance: Cyclical encoding of the key (2D vector)
         key_strength: Strength of the estimated key (correlation score)
     """
 
@@ -66,7 +95,8 @@ def extract_chroma_features(song: dict) -> dict:
 
     total_chroma = normalise(low_chroma + mid_chroma + high_chroma)
 
-    key, key_strength = estimate_key(total_chroma)
+    key, key_distance, key_strength = estimate_key(total_chroma)
+
 
     return {
 
@@ -77,6 +107,7 @@ def extract_chroma_features(song: dict) -> dict:
         "total_chroma": total_chroma.tolist(),
 
         "key": key,
+        "key_distance": key_distance,
         "key_strength": key_strength
     }
 

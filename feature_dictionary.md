@@ -14,9 +14,11 @@ This markdown file serves as a reference point for what each feature is, its dat
 |std_velocity    |  Standard deviation of the velocities in the song.              |float64| Basic Descriptive|
 |num_files       |  Number of files in the song.              |  int64| Basic Descriptive|
 |mean_instruments|  Mean number of instruments used across the files in the song.              |float64| Basic Descriptive|
-|low_chroma      |  12D normalised chroma vector for low pitches| List | Chroma|
-|mid_chroma      |  12D chroma vector for mid pitches| List | Chroma|
-|high_chroma     |  12D chroma vector for high pitches| List | Chroma|
-|total_chroma    |  12D chroma vector for all pitches| List | Chroma|
-|key             |  Estimated key of the song using a simple Krumhansl-Schmuckler-style correlation method| List | Chroma|
-|key_strength    |  Strength of the estimated key (correlation score)| List | Chroma|
+|low_chroma      |  12D normalised chroma vector for low pitches| list | Chroma|
+|mid_chroma      |  12D normalised chroma vector for mid pitches| list | Chroma|
+|high_chroma     |  12D normalised chroma vector for high pitches| list | Chroma|
+|total_chroma    |  12D normalised chroma vector for all pitches| list | Chroma|
+|key             |  Estimated key of the song using a simple Krumhansl-Schmuckler-style correlation method| list | Chroma|
+|key_distance    |  Cyclical encoding of the key | list | Chroma
+|key_strength    |  Strength of the estimated key (correlation score)| list | Chroma|
+

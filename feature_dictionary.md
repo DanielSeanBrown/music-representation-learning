@@ -18,7 +18,9 @@ This markdown file serves as a reference point for what each feature is, its dat
 |mid_chroma      |  12D normalised chroma vector for mid pitches| list | Chroma|
 |high_chroma     |  12D normalised chroma vector for high pitches| list | Chroma|
 |total_chroma    |  12D normalised chroma vector for all pitches| list | Chroma|
-|key             |  Estimated key of the song using a simple Krumhansl-Schmuckler-style correlation method| list | Chroma|
+|key             |  Estimated key of the song using a simple Krumhansl-Schmuckler-style correlation method| string | Chroma|
 |key_distance    |  Cyclical encoding of the key | list | Chroma
-|key_strength    |  Strength of the estimated key (correlation score)| list | Chroma|
-
+|key_strength    |  Strength of the estimated key (correlation score)| float | Chroma|
+|pitch_entropy   |  Shannon entropy of the pitch distribution (histogram)| float | Entropy |
+|duration_entropy|  Shannon entropy of the duration distribution (histogram)| float | Entropy |
+|ioi_entropy     |  Shannon entropy of the inter-onset interval distribution (histogram)| float | Entropy |

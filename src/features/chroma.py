@@ -1,6 +1,6 @@
 import numpy as np
 
-def estimate_key(chroma):
+def estimate_key(chroma: np.ndarray) -> tuple[str, float]:
     """Given a 12D chroma vector, estimate the key using a simple Krumhansl-Schmuckler-style correlation method."""
 
     # Define the major and minor key profiles based on Krumhansl & Kessler (1982)
@@ -31,11 +31,11 @@ def estimate_key(chroma):
 
     return best_key, best_score
 
-def normalise(x):
+def normalise(x: np.ndarray) -> np.ndarray:
     """Normalise a vector to sum to 1."""
     return x / (x.sum() + 1e-9)
 
-def chroma_from_pitches(pitches):
+def chroma_from_pitches(pitches: np.ndarray) -> np.ndarray:
     """Given a list of pitches, return a 12D chroma vector."""
 
     if len(pitches) == 0:
@@ -49,7 +49,15 @@ def chroma_from_pitches(pitches):
     )
 
 def extract_chroma_features(song: dict) -> dict:
-    """Given a song dictionary, extract chroma features and estimate the key."""
+    """Given a song dictionary, extract chroma features and estimate the key.
+    Returns a dictionary containing:
+        low_chroma: 12D chroma vector for low pitches
+        mid_chroma: 12D chroma vector for mid pitches
+        high_chroma: 12D chroma vector for high pitches
+        total_chroma: 12D chroma vector for all pitches
+        key: Estimated key of the song
+        key_strength: Strength of the estimated key (correlation score)
+    """
 
 
     low_chroma = chroma_from_pitches(song["low"]["pitches"])
@@ -62,12 +70,23 @@ def extract_chroma_features(song: dict) -> dict:
 
     return {
 
-        "low_chroma": low_chroma,
-        "mid_chroma": mid_chroma,
-        "high_chroma": high_chroma,
+        "low_chroma": low_chroma.tolist(),
+        "mid_chroma": mid_chroma.tolist(),
+        "high_chroma": high_chroma.tolist(),
 
-        "total_chroma": total_chroma,
+        "total_chroma": total_chroma.tolist(),
 
         "key": key,
         "key_strength": key_strength
     }
+
+if __name__ == "__main__":
+    import pandas as pd
+    example_song = {
+        "low": {"pitches": np.array([60, 62, 64])},
+        "mid": {"pitches": np.array([65, 67, 69])},
+        "high": {"pitches": np.array([71, 72, 74])}
+    }
+    example_features = pd.DataFrame([extract_chroma_features(example_song)])
+    print(example_features.head())
+    print({col: type(example_features[col].iloc[0]) for col in example_features.columns})

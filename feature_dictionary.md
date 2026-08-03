@@ -24,3 +24,11 @@ This markdown file serves as a reference point for what each feature is, its dat
 |pitch_entropy   |  Shannon entropy of the pitch distribution (histogram)| float | Entropy |
 |duration_entropy|  Shannon entropy of the duration distribution (histogram)| float | Entropy |
 |ioi_entropy     |  Shannon entropy of the inter-onset interval distribution (histogram)| float | Entropy |
+|melody_intervals|  Intervals of the melody| list| Melody|
+|melody_ngrams   |  N-grams of the melody intervals| dict| Melody|
+|low_intervals   |  Intervals of the low part| list| Melody|
+|low_ngrams      |  N-grams of the low part| dict| Melody|
+|mid_intervals   |  Intervals of the mid part| list| Melody|
+|mid_ngrams      |  N-grams of the mid part| dict| Melody|
+|high_intervals  |  Intervals of the high part| list| Melody|
+|high_ngrams     |  N-grams of the high part| dict| Melody|

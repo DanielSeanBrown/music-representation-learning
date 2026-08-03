@@ -15,3 +15,4 @@ c) begin simmilarooty work
 d) produce visualisation tool
 
 
+Run API with uvicorn src.api.app:app --reload then visit: http://127.0.0.1:8000/docs

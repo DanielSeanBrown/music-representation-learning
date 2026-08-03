@@ -112,7 +112,9 @@ class MusicExplorer:
 
         query = self.embeddings[
             faiss_id:faiss_id + 1
-        ]
+        ].copy()
+
+        faiss.normalize_L2(query)
 
         D, I = self.index.search(
             query,

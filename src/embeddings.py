@@ -143,7 +143,7 @@ def produce_FAISS_index(embeddings: np.ndarray=None, limit: int = 30, save: bool
 
 
 if __name__ == "__main__":
-    LIMIT = 30
+    LIMIT = 5000
     metadata_df = pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv")
     if "faiss_id" not in metadata_df.columns:
         metadata_df["faiss_id"] = metadata_df.index

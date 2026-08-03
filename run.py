@@ -15,7 +15,6 @@ def main(
         force_download: bool = False,
         force_extraction: bool = False,
         force_embedding: bool = False,
-        features_df: pd.DataFrame = None,
         limit: int = 31034):
     """
     Main script for downloading, preprocessing, extracting features, and producing embeddings for the visualisation tool.
@@ -53,4 +52,4 @@ def main(
 
 if __name__ == "__main__":
 
-    main(force_download=False, force_extraction=True, force_embedding=True, limit=20)
+    main(force_download=False, force_extraction=True, force_embedding=True, limit=5000)

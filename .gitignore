@@ -6,3 +6,10 @@
 
 # Metadata files
 *.h5
+*.csv
+
+# Feature Dataframes
+*.pkl
+
+# Embeddings
+*.npy

@@ -10,11 +10,11 @@ def load_data():
     )
 
     embeddings = np.load(
-        "data/processed/all_features_limit_20_embeddings.npy"
+        "data/processed/all_features_limit_1000_embeddings.npy"
     ).astype("float32")
 
     index = faiss.read_index(
-        "data/processed/all_features_limit_20_index.index"
+        "data/processed/all_features_limit_1000_index.index"
     )
 
     return metadata, embeddings, index

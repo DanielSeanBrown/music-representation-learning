@@ -32,3 +32,12 @@ This markdown file serves as a reference point for what each feature is, its dat
 |mid_ngrams      |  N-grams of the mid part| dict| Melody|
 |high_intervals  |  Intervals of the high part| list| Melody|
 |high_ngrams     |  N-grams of the high part| dict| Melody|
+|ioi_hist        |  Histogram of inter-onset intervals|list | Rhythm|
+|duration_hist   |  Histogram of note durations|list | Rhythm|
+|drum_ioi_hist   |  Histogram of drum inter-onset intervals|list | Rhythm|
+|bass_ioi_hist   |  Histogram of bass inter-onset intervals|list | Rhythm|
+|melody_ioi_hist |  Histogram of melody inter-onset intervals|list | Rhythm|
+|density         |  Density of notes per unit time|float| Rhythm|
+|drum_density    |  Density of drum notes per unit time|float| Rhythm|
+|bass_density    |  Density of bass notes per unit time|float| Rhythm|
+|melody_density  |  Density of melody notes per unit time|float| Rhythm|

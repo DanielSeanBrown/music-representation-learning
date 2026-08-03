@@ -79,13 +79,13 @@ def chroma_from_pitches(pitches: np.ndarray) -> np.ndarray:
 def extract_chroma_features(song: dict) -> dict:
     """Given a song dictionary, extract chroma features and estimate the key.
     Returns a dictionary containing:
-        low_chroma: 12D chroma vector for low pitches
-        mid_chroma: 12D chroma vector for mid pitches
-        high_chroma: 12D chroma vector for high pitches
-        total_chroma: 12D chroma vector for all pitches
-        key: Estimated key of the song
-        key_distance: Cyclical encoding of the key (2D vector)
-        key_strength: Strength of the estimated key (correlation score)
+        low_chroma      list - 12D chroma vector for low pitches
+        mid_chroma      list - 12D chroma vector for mid pitches
+        high_chroma     list - 12D chroma vector for high pitches
+        total_chroma    list - 12D chroma vector for all pitches
+        key             str  - Estimated key of the song
+        key_distance    list - Cyclical encoding of the key (2D vector)
+        key_strength    float - Strength of the estimated key (correlation score)
     """
 
 

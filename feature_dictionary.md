@@ -41,3 +41,7 @@ This markdown file serves as a reference point for what each feature is, its dat
 |drum_density    |  Density of drum notes per unit time|float| Rhythm|
 |bass_density    |  Density of bass notes per unit time|float| Rhythm|
 |melody_density  |  Density of melody notes per unit time|float| Rhythm|
+|segment_chroma   | Chroma vectors for each segment  |list | Structure|
+|chord_progression| Most prominent pitch class in each segment  |list | Structure|
+|harmonic_rhythm  | Proportion of segments where the chord root changes  |float| Structure|
+|segment_variation| Average variation between consecutive segments  |float| Structure|

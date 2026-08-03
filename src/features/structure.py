@@ -1,7 +1,13 @@
 import numpy as np
 
-def extract_structure_features(song: dict, n_segments: int = 16):
-    """Given a song dictionary, extract structural features based on chroma segmentation."""
+def extract_structure_features(song: dict, n_segments: int = 16) -> dict:
+    """Given a song dictionary, extract structural features based on chroma segmentation.
+    Returns a dictionary containing:
+        segment_chroma     list     - Chroma vectors for each segment
+        chord_progression  list     - Most prominent pitch class in each segment
+        harmonic_rhythm    float    - Proportion of segments where the chord root changes
+        segment_variation  float    - Average variation between consecutive segments
+    """
 
     starts = song["starts"]
     pitches = song["pitches"]
@@ -53,8 +59,19 @@ def extract_structure_features(song: dict, n_segments: int = 16):
     ])
 
     return {
-        "segment_chroma": segment_chroma,
-        "chord_progression": chord_roots,
+        "segment_chroma": segment_chroma.tolist(),
+        "chord_progression": chord_roots.tolist(),
         "harmonic_rhythm": harmonic_rhythm,
         "segment_variation": segment_variation
     }
+
+if __name__ == "__main__":
+    import pandas as pd
+    example_song = {
+        "starts": np.array([0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5]),
+        "pitches": np.array([60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79, 81, 83, 84, 86])
+    }
+    example = pd.DataFrame([extract_structure_features(example_song)])
+    print(example.head())
+    print({col: type(example[col].iloc[0]) for col in example.columns})
+    print(np.array(example['segment_chroma'].iloc[0]).shape)  # Should be (16, 12)

@@ -23,6 +23,12 @@ def build_ngrams(intervals: np.ndarray, n: int = 3) -> Counter:
 
     return Counter(motifs)
 
+def counter_to_dict(counter):
+    return {
+        ",".join(map(str, k)): int(v)
+        for k, v in counter.items()
+    }
+
 def extract_ngram_features(song: dict, n: int = 3) -> dict:
     """Given a song dictionary, extract n-gram features based on pitch intervals.
     Returns a dictionary containing:
@@ -44,13 +50,13 @@ def extract_ngram_features(song: dict, n: int = 3) -> dict:
 
     return {
         "melody_intervals": melody_intervals.tolist(),
-        "melody_ngrams": dict(build_ngrams(melody_intervals, n=n)),
+        "melody_ngrams": counter_to_dict(build_ngrams(melody_intervals, n=n)),
         "low_intervals": low_intervals.tolist(),
-        "low_ngrams": dict(build_ngrams(low_intervals, n=n)),
+        "low_ngrams": counter_to_dict(build_ngrams(low_intervals, n=n)),
         "mid_intervals": mid_intervals.tolist(),
-        "mid_ngrams": dict(build_ngrams(mid_intervals, n=n)),
+        "mid_ngrams": counter_to_dict(build_ngrams(mid_intervals, n=n)),
         "high_intervals": high_intervals.tolist(),
-        "high_ngrams": dict(build_ngrams(high_intervals, n=n))
+        "high_ngrams": counter_to_dict(build_ngrams(high_intervals, n=n))
     }
 
 if __name__ == "__main__":
@@ -63,5 +69,4 @@ if __name__ == "__main__":
     }
     example = pd.DataFrame([extract_ngram_features(example_song)])
     print(example.head())
-    print(example.dtypes)
     print({col: type(example[col].iloc[0]) for col in example.columns})

@@ -35,7 +35,7 @@ def main(
         logger.info("Downloading and preprocessing MIDI files...")
         download.download_and_preprocess_midi_files()
 
-    if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{limit}.pkl").exists() or force_extraction:
+    if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{limit}.parquet").exists() or force_extraction:
         logger.info("Extracting features from MIDI files...")
         extract_features(metadata_df=pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv"), limit=limit, save=True)
 
@@ -52,4 +52,4 @@ def main(
 
 if __name__ == "__main__":
 
-    main(force_download=False, force_extraction=True, force_embedding=True, limit=5000)
+    main(force_download=False, force_extraction=True, force_embedding=True, limit=30)

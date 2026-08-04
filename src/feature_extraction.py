@@ -206,7 +206,7 @@ def extract_features(metadata_df: pd.DataFrame, extraction_func: callable=perfor
                 rows.append(features)
     features_df = pd.DataFrame(rows)
     if save:
-        features_df.to_pickle(f"{PROCESSED_DATA_DIR}/simmilarity_features_{limit}.pkl")
+        features_df.to_parquet(f"{PROCESSED_DATA_DIR}/simmilarity_features_{limit}.parquet", index=False)
 
     return pd.DataFrame(rows)
 
@@ -221,3 +221,5 @@ if __name__ == "__main__":
     logger.info("Extracting features for the first 30 rows of metadata...")
     features_df = extract_features(metadata_df, limit=30, save=True)
     logger.info(features_df.head())
+    for col in features_df.columns:
+        logger.info(f"Column: {col}, Type: {type(features_df[col].iloc[0])}")

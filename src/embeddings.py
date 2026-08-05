@@ -19,20 +19,6 @@ from src.feature_extraction import extract_features
 
 
 
-
-def load_dataset(file_name: str) -> pd.DataFrame:
-    """
-    Load a dataset from a pickle file.
-
-    Args:
-        file_name (str): The name of the pickle file to load."""
-    
-    if not Path(PROCESSED_DATA_DIR / file_name).exists():
-        raise FileNotFoundError(f"The file {file_name} does not exist.")
-    else:
-        return pd.read_pickle(Path(PROCESSED_DATA_DIR / file_name))
-
-
 def vectorise_counter(counter, vocab):
 
     vec = np.zeros(len(vocab))
@@ -93,7 +79,7 @@ def produce_embeddings(features_df: pd.DataFrame=None, limit: int = 30, save: bo
         save (bool): Whether to save the embeddings to a numpy file. Defaults to True."""
 
     if features_df is None:
-        features_df = load_dataset(f"simmilarity_features_{limit}.pkl")
+        features_df = pd.read_parquet(f"{PROCESSED_DATA_DIR}/simmilarity_features_{limit}.parquet")
 
     global_vocab = Counter()
     for ngrams in features_df["melody_ngrams"]:
@@ -148,9 +134,9 @@ if __name__ == "__main__":
     if "faiss_id" not in metadata_df.columns:
         metadata_df["faiss_id"] = metadata_df.index
         metadata_df.to_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv", index=False)
-    if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{LIMIT}.pkl").exists():
+    if not Path(PROCESSED_DATA_DIR / f"simmilarity_features_{LIMIT}.parquet").exists():
         features_df = extract_features(metadata_df, limit=LIMIT, save=True)
-    features_df = load_dataset(f"simmilarity_features_{LIMIT}.pkl")
+    features_df = pd.read_parquet(f"{PROCESSED_DATA_DIR}/simmilarity_features_{LIMIT}.parquet")
     embeddings_df = produce_embeddings(features_df, limit=LIMIT, save=True)
     index = produce_FAISS_index(embeddings_df.values, limit=LIMIT, save=True)
     faiss.write_index(index, f"{PROCESSED_DATA_DIR}/all_features_limit_{LIMIT}_index.index")

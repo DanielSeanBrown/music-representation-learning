@@ -183,18 +183,69 @@ def perform_extraction_for_file(midi_path: str) -> dict:
         **extract_entropy_features(song),
     }
 
+def extract_full_in_chunks(metadata_df: pd.DataFrame, extraction_func: callable=perform_extraction_for_file, chunk_size: int = 4000) -> pd.DataFrame:
+    """Extract features in chunks for large datasets to avoid memory issues.
+
+    Args:
+        metadata_df (pd.DataFrame): DataFrame containing metadata about the MIDI files, including paths.
+        extraction_func (callable): Function that takes a MIDI file path and returns a dictionary of extracted features.
+        chunk_size (int, optional): Number of rows to process in each chunk. Defaults to 4000.
+
+    Returns:
+        pd.DataFrame: DataFrame containing all extracted features.
+    """
+
+    all_rows = []
+
+    for start_idx in range(0, metadata_df.shape[0], chunk_size):
+        end_idx = min(start_idx + chunk_size, metadata_df.shape[0])
+        logger.info(f"Processing rows {start_idx} to {end_idx}...")
+        part_metadata_df = metadata_df.iloc[start_idx:end_idx]
+
+        part_rows = []
+        for idx, row in tqdm(part_metadata_df.iterrows(), total=part_metadata_df.shape[0], desc=f"Extracting features from MIDI files (rows {start_idx} to {end_idx})"):
+            features = extraction_func(row["midi_path"])
+            if features is not None:
+                features["track_id"] = row["track_id"]
+                features["artist"] = row["artist_name"]
+                features["title"] = row["title"]
+                part_rows.append(features)
+
+        part_df = pd.DataFrame(part_rows)
+        if not part_df.empty:
+            part_df.to_parquet(f"{PROCESSED_DATA_DIR}/full_extraction_parts/similarity_features_part_{start_idx}_{end_idx}.parquet", index=False)
+        all_rows.extend(part_rows)
+
+    return pd.DataFrame(all_rows)
+
+
 def extract_features(metadata_df: pd.DataFrame, extraction_func: callable=perform_extraction_for_file, limit: int = 10, save: bool = True) -> pd.DataFrame:
 
     """Extract features using the provided function for MIDI files listed in the metadata DataFrame. 
+
+    If the limit is equal to the full size of the dataset, then extraction is performed in parts.
+
     Args:
         metadata_df (pd.DataFrame): DataFrame containing metadata about the MIDI files, including paths.
         extraction_func (callable): Function that takes a MIDI file path and returns a dictionary of extracted features.
         limit (int, optional): Maximum number of rows to process for testing. Defaults to 10.
-        save (bool, optional): Whether to save the extracted features to a pickle file. Defaults to True."""
+        save (bool, optional): Whether to save the extracted features to a pickle file. Defaults to True.
+        
+    Returns:
+        pd.DataFrame: DataFrame containing the extracted features.
+    """
 
     rows = []
 
-    for idx, row in tqdm(metadata_df.iterrows(), total=metadata_df.shape[0]):
+    # Ensure limit cannot exceed the total number of available MIDI files
+    if limit > 31034:
+        limit = 31034
+    
+    if limit == 31034:
+        logger.info("Extracting features in parts due to large dataset size...")
+        return extract_full_in_chunks(metadata_df, extraction_func=extraction_func, chunk_size=4000)
+    
+    for idx, row in tqdm(metadata_df.iterrows(), total=metadata_df.shape[0], desc="Extracting features from MIDI files"):
 
         if idx < limit:  # Process only the first `limit` rows 
             features = extraction_func(row["midi_path"])
@@ -206,7 +257,7 @@ def extract_features(metadata_df: pd.DataFrame, extraction_func: callable=perfor
                 rows.append(features)
     features_df = pd.DataFrame(rows)
     if save:
-        features_df.to_parquet(f"{PROCESSED_DATA_DIR}/simmilarity_features_{limit}.parquet", index=False)
+        features_df.to_parquet(f"{PROCESSED_DATA_DIR}/similarity_features_{limit}.parquet", index=False)
 
     return pd.DataFrame(rows)
 

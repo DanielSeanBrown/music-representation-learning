@@ -1,0 +1,1047 @@
+/*This CSS file contains the stylings for the frontend application */
+/*CSS variables are defined at the top for easy customization of the color scheme and other properties.*/
+/*The colour scheme used is inspired by the theme I use in VS Code*/
+/*CSS is not my strongest skill, so I have kept it simple and easy to understand with comments to clarify each section.*/
+
+
+/* Style definitions */
+:root {
+  --bg: #000c18;
+  --bg-raised: #00111f;
+  --bg-card: #001522;
+  --bg-hover: #002033;
+  --border: #16384a;
+  --border-bright: #20536a;
+  --text: #d6e7f0;
+  --text-muted: #7895a5;
+  --text-dim: #526f7e;
+  --accent: #00b7d4;
+  --accent-bright: #00d9f5;
+  --accent-soft: rgba(0, 183, 212, 0.12);
+  --danger: #e06c75;
+  --radius: 8px;
+}
+
+
+/* For consistent sizing */
+* {box-sizing: border-box;}
+
+
+/* Default appearance of the page */
+body {
+  margin: 0; /* Remove default margin */
+  background: var(--bg);
+  color: var(--text);
+  font-family:  /*Multiple fonts provided as a fallback list*/
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.5;
+}
+
+
+/* Maintain consistent font for buttons and change cursor on hover */
+button,
+input {font: inherit;}
+button {cursor: pointer;}
+
+
+/*Controls content width for wider/smaller screens*/
+.app {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 55px 0 100px;
+}
+
+
+/* Controls main header layout*/
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+/*Styling for app title*/
+.app-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/*Styling for header below app title*/
+.app-title-row h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/*Styling for paragraph below app title*/
+.app-header p {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/*Styling for section labels*/
+.section-label {
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase; /*Force uppercase text*/
+}
+
+/*Creates horizontal heading area*/
+.section-heading {
+  display: flex;
+  justify-content: space-between; 
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/*Styling for section heading text*/
+.section-heading h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+/*Styling for paragraph below section heading*/
+.section-heading p {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+
+
+/*Buttons*/
+
+/*This section establishes common button behaviour and applies to every button*/
+button {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.08s ease;
+}
+
+
+button:active:not(:disabled) {
+  transform: translateY(1px); /*Slightly move button down on active to give a pressed effect*/
+}
+
+/* Disabled buttons have reduced opacity and a not-allowed cursor */
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+/*Primary button*/
+/*Different styling for main button*/
+.primary-button {
+  padding: 9px 15px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #001018;
+  font-weight: 600;
+  box-shadow:  0 0 0 rgba(0, 183, 212, 0);
+}
+
+/*Hover over button creates glow effect*/
+.primary-button:hover:not(:disabled) { /*Prevents action on disabled buttons */
+  background: var(--accent-bright);
+  border-color: var(--accent-bright);
+  color: #001018;
+  box-shadow:  0 0 16px rgba(0, 183, 212, 0.18);
+}
+
+
+/*Styling for less important buttons, dark background instead of bright cyan*/
+.secondary-button {
+  padding: 9px 15px;
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+/*Hover over button creates glow effect*/
+.secondary-button:hover:not(:disabled) { /*Prevents action on disabled buttons */
+  background: var(--bg-hover);
+  border-color: var(--border-bright);
+  color: var(--text);
+}
+
+/*Toggle for opening weights settings*/
+.similarity-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: var(--bg-raised);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+/*Hover over button creates glow effect*/
+.similarity-toggle:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/*Give text varrying emphasis */
+.similarity-toggle span {
+  color: var(--accent);
+}
+.similarity-toggle strong {
+  color: var(--text);
+}
+
+
+/*Styling for buttons asosciated with single songs, they are smaller than normal buttons and have less bright colours*/
+.song-actions button,
+.neighbour-actions button {
+  padding: 6px 10px;
+  background: var(--bg-raised);
+  border-color: var(--border);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.song-actions button:hover,
+.neighbour-actions button:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-bright);
+  box-shadow:
+    0 0 10px rgba(0, 183, 212, 0.08);
+}
+
+/*Insert space below search section*/
+.search-section {
+  margin-bottom: 45px;
+}
+
+/*Align search box and button*/
+.search-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+
+.search-container input {
+  flex: 1; /*Allow the input to grow and fill available space*/
+  min-width: 0;
+  padding: 13px 15px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+
+/*Styling for the default text in the searchbox*/
+.search-container input::placeholder {
+  color: var(--text-dim);
+}
+
+/*Highlight serachbox borders on user click*/
+.search-container input:focus {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 2px rgba(0, 183, 212, 0.08);
+}
+
+
+
+/*Styling for feature weights settings panel*/
+.settings-panel {
+  margin-bottom: 35px;
+  padding: 24px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/*Styling for settings header, subheader and text*/
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.settings-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.settings-header p {
+  margin: 5px 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/*Styling for close button on settings panel*/
+.close-settings {
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border-color: var(--border);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+}
+
+/*Hover over button creates glow effect*/
+.close-settings:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-bright);
+  color: var(--accent);
+}
+
+/*Create and style weight grid for feature weights adjustment*/
+.weight-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
+  gap: 20px 30px;
+}
+
+/*Styling for individual weight rows with sliders*/
+.weight-row label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/*Highlight the feature name in the weight row*/
+.weight-row label strong {
+  color: var(--accent);
+}
+
+/*colour and length of slider*/
+.weight-row input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+/*Styling for the action buttons below the weight sliders*/
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+
+/*Add space after the search section*/
+.results-section {
+  margin-bottom: 55px;
+}
+
+/*styling for the number of results returned from a search*/
+.result-count {
+  padding: 4px 9px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--accent);
+  font-size: 0.75rem;
+}
+
+/*Styling for song and neighbour lists*/
+.song-list,
+.neighbour-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/*Styling for individual song and neighbour cards where interaction buttons will sit*/
+.song-card,
+.neighbour-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+/*Hover over song and neighbour cards creates a glow effect*/
+.song-card:hover,
+.neighbour-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-bright);
+}
+
+/*Helps with text overflow in song info*/
+.song-info {
+  min-width: 0;
+}
+
+/*Styling for song title and artist name in song info*/
+.song-info h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.song-info p {
+  margin: 3px 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/*Styling for song and neighbour action buttons*/
+.song-actions,
+.neighbour-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0; /* Prevents the action buttons from shrinking when the card is too small */
+}
+
+
+/*Spacing and divider line for exploration section*/
+.exploration-section {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+
+/*Styling for exploration section header, subheader and text*/
+.exploration-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.exploration-header h2 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.exploration-header p {
+  margin: 3px 0 0;
+  color: var(--text-muted);
+}
+
+
+/*Styling for track visit history, styled as a small card*/
+.history {
+  margin-bottom: 40px;
+  padding: 14px 16px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/*Styling for history header*/
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/*Styling for buttons in history header*/
+.history-header button {
+  padding: 3px 7px;
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+/*Hover over button creates glow effect*/
+.history-header button:hover {
+  background: var(--accent-soft);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+/*Styling for list of songs visited*/
+.history-path {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line if songs visited exceed the width */
+  gap: 5px;
+}
+
+/*Styling for individual songs in the history*/
+.history-item {
+  padding: 5px 9px;
+  background: transparent;
+  border-color: var(--border);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/*Hover over song in history creates glow effect*/
+.history-item:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-bright);
+  color: var(--text);
+}
+
+/*Currently selected song has cyan glow*/
+.history-item.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/*Styling for controls where hustory can be navigated or cleared*/
+.history-controls {
+  display: flex;
+  gap: 7px;
+}
+
+/*Styling for buttons to interact with song visit history*/
+.history-controls button {
+  padding: 7px 12px;
+  background: var(--bg-raised);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+/*Hover over button creates glow effect*/
+.history-controls button:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--border-bright);
+  color: var(--text);
+}
+
+
+/*Spacing for nearest neighbour display*/
+.neighbours-section {
+  margin-bottom: 55px;
+}
+
+/*Styling for control for number of neighbours displayed*/
+.inline-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/*Styling for input box*/
+.inline-control input {
+  width: 60px;
+  padding: 6px 8px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  outline: none;
+}
+
+/*Highlight input box borders on user click*/
+.inline-control input:focus {
+  border-color: var(--accent);
+}
+
+/*format similarity scores*/
+.score {
+  min-width: 55px;
+  color: var(--accent);
+  font-family: monospace;
+  font-size: 0.85rem;
+  text-align: right;
+}
+
+
+/*spacing for interactive similarity graph*/
+.graph-section {
+  margin-top: 50px;
+}
+
+/*Styling for graph card where the interactive graph will be displayed*/
+.graph-card {
+  width: 100%;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/*Styling for graph container where the interactive graph will be displayed*/
+.graph-container {
+  width: 100%;
+  height: 700px;
+  position: relative; /* Ensure the elements inside are positioned relative to this container */
+  background: #1e2230;
+  border: 1px solid #34394b;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+/*Styling for the pop up when hovering over graph elements*/
+.graph-tooltip {
+  position: fixed;
+  z-index: 10000; /* Ensure the tooltip appears above other elements */
+  pointer-events: none; /* Prevent the tooltip from interfering with mouse events */
+  background: #11141d;
+  color: #c5c8d4;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1px solid #34394b;
+  font-size: 12px;
+  line-height: 1.5;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.35);
+  max-width: 240px;
+}
+
+/*Styling for the title in the graph tooltip*/
+.graph-tooltip strong {
+  color: #00c8ff;
+  font-size: 13px;
+}
+
+/*Styling for the small text in the graph tooltip*/
+.graph-tooltip small {
+  color: #777e98;
+}
+
+
+/*Styling for the path finding section*/
+.path-section {
+  margin-top: 60px;
+  padding: 30px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/*Controls layout for selecting start and end songs for path finding*/
+.path-selection {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* Two equal columns for the song selections and a fixed column for the arrow in between */
+  align-items: center;
+  gap: 20px;
+  margin-top: 25px;
+}
+
+/*Styling for the individual song selection cards in the path finding section*/
+.path-song {
+  min-height: 110px;
+  padding: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/*Styling for the labels in the path finding section*/
+.path-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+}
+
+/*Styling for the headings in the path finding section*/
+.path-song h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/*Styling for the paragraphs in the path finding section*/
+.path-song p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/*Styling for the empty state in the path finding section*/
+.path-empty {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+/*Styling for the arrow between the two song selections in the path finding section*/
+.path-arrow {
+  color: var(--accent);
+  font-size: 1.6rem;
+}
+
+.path-options {
+  margin-top: 20px;
+}
+
+/*Styling for the labels in the path finding options section*/
+.path-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/*Styling for amending the number of neighbors to consider in the path finding options section*/
+.path-options input {
+  width: 60px;
+  padding: 6px 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  outline: none;
+}
+
+/*Highlight input box borders on user click*/
+.path-options input:focus {
+  border-color: var(--accent);
+}
+
+/*Styling for the action buttons in the path finding section*/
+.path-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+
+/*Styling for the result returned on finding the shortest path*/
+.path-result {
+  margin-top: 35px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+/*Styling for the header of the path result section*/ 
+.path-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 25px;
+}
+
+/*Styling for the heading in the path result section*/
+.path-result-header h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+/*Align teh total path cost*/
+.path-cost {
+  text-align: right;
+}
+
+/*Making the total path cost stand out*/
+.path-cost span {
+  display: block;
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+}
+
+/*Styling for the total path cost value*/
+.path-cost strong {
+  color: var(--accent);
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+/*Styling for the list of steps in the path result section*/
+.path-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/*Styling for the individual steps in the path result section*/
+.path-step {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 15px;
+  min-height: 65px;
+}
+
+/*Styling for the vertical line connecting the steps in the path result section*/
+.path-step:not(:last-child)::after {
+  content: ""; /* Empty content to create the pseudo-element */
+  position: absolute;
+  left: 14px;
+  top: 36px;
+  bottom: -1px;
+  width: 1px;
+  background: var(--border-bright);
+}
+
+/*Styling for the position number of each step in the path result section*/
+/*Numbers are displayed in a circle with a border and background color*/
+.path-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  width: 29px;
+  height: 29px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.path-step-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.path-step-content strong {
+  font-size: 0.9rem;
+}
+
+.path-step-content span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+/*Display styling for when no path is found*/
+.no-path {
+  padding: 20px;
+  background: rgba(224, 108, 117, 0.08);
+  border: 1px solid rgba(224, 108, 117, 0.3);
+  border-radius: 6px;
+  color: #d99197;
+}
+
+/*Styling for the graph of the path found between two songs*/
+.path-graph {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+/*Styling for the heading of the path graph section*/
+.path-graph p {
+  margin: 5px 0 15px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+
+
+/*Styling for general purpose error message*/
+.error-message {
+  margin-bottom: 20px;
+  padding: 12px 15px;
+  background: rgba(224, 108, 117, 0.08);
+  border: 1px solid rgba(224, 108, 117, 0.3);
+  border-radius: 6px;
+  color: #d99197;
+  font-size: 0.85rem;
+}
+
+/*Text styling for when content is loading*/
+.loading-message {
+  padding: 15px 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+
+/*Styling for the guide button*/
+/*Stacks them vertically and aligns them to the right*/
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/*Styling for the guide button itself*/
+.guide-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: var(--bg-raised);
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+/*Hover over button creates glow effect*/
+.guide-button:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/*Dark overlay covering page on guide opening*/
+.guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: rgba(5, 8, 12, 0.78);
+}
+
+/*Styling for teh guide pop-up window*/
+.guide-modal {
+  width: min(900px, 100%);
+  max-height: 88vh; /* Limit the height to 88% of the viewport height */
+  display: flex;
+  flex-direction: column;
+  background: #11161d;
+  border: 1px solid #3d4653;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+/*Styling for the header of the guide pop-up window*/
+.guide-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 1px solid #2d3540;
+}
+
+/*Styling for the heading in the guide pop-up window*/
+.guide-header h2 {
+  margin: 5px 0 0;
+  color: #e7f7fb;
+  font-size: 20px;
+}
+
+/*Styling for the close button on the guide pop-up window*/
+.guide-close {
+  border: 0;
+  background: transparent;
+  color: #8995a5;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/*Hover over button creates glow effect*/
+.guide-close:hover {
+  color: #e7f7fb;
+}
+
+.guide-content {
+  overflow-y: auto; /* Allow vertical scrolling if content is too long */
+  padding: 28px;
+}
+
+/*Styling for sections within the guide pop-up window*/
+.guide-section {
+  padding-bottom: 26px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid #252d37;
+}
+
+/*Remove bottom margin and border for the last section in the guide pop-up window*/
+.guide-section:last-child {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+/*Styling for the headings within the guide pop-up window*/
+.guide-section h3 {
+  margin: 0 0 10px;
+  color: #e7f7fb;
+  font-size: 15px;
+}
+
+/*Styling for the paragraphs within the guide pop-up window*/
+.guide-section p {
+  margin: 8px 0;
+  color: #aeb8c5;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/*Styling for the lists within the guide pop-up window*/
+.guide-section ul,
+.guide-section ol {
+  margin: 12px 0;
+  padding-left: 22px;
+  color: #aeb8c5;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/*Styling for the list items within the guide pop-up window*/
+.guide-section strong {
+  color: #d8f3fa;
+}
+
+.search-mode-buttons {
+  display: flex; /*Arrange buttons in a row */
+  align-items: center;
+  gap: 8px;
+}
+
+/*Styling for the search mode toggle buttons*/
+.search-mode-button {
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  padding: 9px 14px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:  /*Smooth transition for background, border, color, box-shadow, and transform properties*/
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.08s ease;
+}
+
+/*Hover over button creates glow effect*/
+.search-mode-button:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/*Currently active mode stays highlighted*/
+.search-mode-button.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-bright);
+}

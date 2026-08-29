@@ -1564,7 +1564,7 @@ this does not change history since it responds to the user clicking on a specifi
             Finding Tracks
           </h3>
           <p>
-            The searchbox at the start of the page can be used to search for tracks in the dataset.
+            The search box at the start of the page can be used to search for tracks in the dataset.
           </p>
           <ul>
             <li>
@@ -1593,12 +1593,12 @@ this does not change history since it responds to the user clicking on a specifi
           </h3>
           <p>
             Once you a select a song for exploration, the <strong>Neighbours</strong> section lists songs that are found to be similar.
-            This is by defualt the 5 most similar, but more or less can be shown using You can change the using the <strong>Count control</strong> on the right hand side.
+            This is by default the 5 most similar, but more or less can be shown using You can change the using the <strong>Count control</strong> on the right hand side.
           </p>
           <p>
-            On each similar songs row, there are three buttons enabling further exploration and a score outligning similarity scored between 0 and 1.
-            The explore button selects that song for quering its most similar songs, allowing you to "hop" across songs to observe each ones local neighbourhood of
-            similar songs. The other two buttons alow you to mark a song as a start or end point in a path. This is explained in more depth at a later section.
+            On each similar songs row, there are three buttons enabling further exploration and a score outlining similarity scored between 0 and 1. 
+            The explore button selects that song for querying its most similar songs, allowing you to "hop" across songs to observe each one's local neighbourhood of 
+            similar songs. The other two buttons allow you to mark a song as a start or end point in a path. This is explained in more depth at a later section. 
           </p>
           <p>
             When a song is selected for exploration, below the list of similar songs there will also be a graph showing the song's local neighbourhood. This is explained next.
@@ -1613,7 +1613,7 @@ this does not change history since it responds to the user clicking on a specifi
           <p>
             The graph provides a visual representation of the songs neighbourhood of most similar tracks.
             Nodes represent songs, with the central node being the currently explored song and surrounding nodes representing similar tracks.
-            The edges connecting nodes are labeled with those tracks similarity scores as well as indicating that the tracks are neighbours.
+            The edges connecting nodes are labelled with those tracks similarity scores as well as indicating that the tracks are neighbours.
             The graph by default extends to show not only the queried song's immediate neighbours but also the second ring of similar tracks, that is, the neighbours of the neighbours.
           </p>
           <p>
@@ -1644,7 +1644,7 @@ this does not change history since it responds to the user clicking on a specifi
           </div>
           <p>
             Nodes in the graph can be selected to move them around for better visibility. 
-            Also, clicking  any node in the graph will make that song the new centre of the exploration,
+            Also, clicking any node in the graph will make that song the new centre of the exploration,
             updating both the graph and list of neighbours for that song.
           </p>
         </section>
@@ -1778,7 +1778,6 @@ this does not change history since it responds to the user clicking on a specifi
 
       </div>
     </section>
-
   </div>
 
 )}

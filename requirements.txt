@@ -1,0 +1,10 @@
+numpy
+pandas
+polars
+scikit-learn
+pretty-midi
+faiss-cpu
+networkx
+fastapi
+uvicorn
+h5py

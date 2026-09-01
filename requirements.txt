@@ -8,3 +8,6 @@ networkx
 fastapi
 uvicorn
 h5py
+loguru
+tqdm
+requests

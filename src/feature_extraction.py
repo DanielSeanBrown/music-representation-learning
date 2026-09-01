@@ -16,7 +16,8 @@ from src.features.structure import extract_structure_features
 from src.features.entropy import extract_entropy_features
 
 def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
-    """Load and preprocess MIDI files from a given directory.
+    """Load and preprocess MIDI files from a given directory into a structured song data dictionary.
+    This function helps avoid double procecessing across the different feature groups by creating a preprocessed representation of the song data.
     
     Args:
         midi_path (str): Path to the directory containing MIDI files.
@@ -24,7 +25,25 @@ def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
         MID_MAX (int): Maximum pitch for mid notes.
 
     Returns:
-        dict: A dictionary containing the extracted song data.
+        dict: A dictionary containing the extracted song data
+        
+        The dictionary contains:
+            "path" (str): The path to the directory containing the MIDI files.
+            "num_files" (int): The number of MIDI files in the directory.
+            "instrument_counts" (list): A list of the number of instruments in each MIDI file.
+            "instrument_programs" (list): A list of instrument programs for all instruments across all MIDI files.
+            "low_notes" (list): A list of all low-pitch notes (below LOW_MAX).    
+            "mid_notes" (list): A list of all mid-pitch notes (between LOW_MAX and MID_MAX).
+            "high_notes" (list): A list of all high-pitch notes (above MID_MAX).
+            "drum_notes" (list): A list of all drum notes.
+            "melody_notes" (list): A list of all melody notes.
+            "**all" (list): Unpacked all notes.
+            "low" (list): Unpacked low-pitch notes.
+            "notes" (list): A list of all notes across all MIDI files.
+            "mid" (list): Unpacked mid-pitch notes.
+            "high" (list): Unpacked high-pitch notes.
+            "drums" (list): Unpacked drum notes.
+            "melody" (list): Unpacked melody notes.
     """
 
     midi_path = Path(midi_path)
@@ -34,13 +53,10 @@ def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
         return None
 
     all_notes = []
-
     low_notes = []
     mid_notes = []
     high_notes = []
-
     drum_notes = []
-
     instrument_programs = []
     instrument_counts = []
 
@@ -94,17 +110,12 @@ def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
     high_notes.sort(key=lambda x: x[0])
     drum_notes.sort(key=lambda x: x[0])
 
-    # --------------------------------------------------
-    # Melody extraction
-    # Highest note at each onset
-    # --------------------------------------------------
 
+    # Melody is extracted as the highest note at each onset
     by_time = defaultdict(list)
 
     for start, end, pitch, velocity in all_notes:
-        by_time[start].append(
-            (pitch, end, velocity)
-        )
+        by_time[start].append((pitch, end, velocity))
 
     melody_notes = []
 
@@ -115,18 +126,21 @@ def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
             key=lambda x: x[0]
         )
 
-        melody_notes.append(
-            (start, end, pitch, velocity)
-        )
+        melody_notes.append((start, end, pitch, velocity))
 
     melody_notes.sort(key=lambda x: x[0])
 
-    # --------------------------------------------------
-    # Helper
-    # --------------------------------------------------
-
     def unpack(notes):
+        """This is a helper function to unpack a list of note tuples into a structured dictionary format.
 
+        Args:
+            notes (list of tuples): Each tuple contains (start, end, pitch, velocity) for a note.
+
+        Returns:
+            dict: A dictionary containing arrays for starts, ends, pitches, velocities, and durations.
+        """
+
+        # Catch empty tracks
         if len(notes) == 0:
             return {
                 "starts": np.array([]),
@@ -167,7 +181,15 @@ def load_song_data(midi_path: str, LOW_MAX:int = 48, MID_MAX:int = 72) -> dict:
     }
 
 def perform_extraction_for_file(midi_path: str) -> dict:
-    """Given the path to a directory containing MIDI files, extract a comprehensive set of musical features."""
+    """Given the path to a directory containing MIDI files,
+    this function calls the extraction functions across the defined feature groups
+    
+    Args:
+        midi_path (str): Path to the MIDI file or directory containing MIDI files.
+
+    Returns:
+        dict: A dictionary containing all extracted features for the given MIDI file.
+    """
 
     song = load_song_data(midi_path) # Perform preprocessing of song data
 
@@ -222,8 +244,11 @@ def extract_full_in_chunks(metadata_df: pd.DataFrame, extraction_func: callable=
 def extract_features(metadata_df: pd.DataFrame, extraction_func: callable=perform_extraction_for_file, limit: int = 10, save: bool = True) -> pd.DataFrame:
 
     """Extract features using the provided function for MIDI files listed in the metadata DataFrame. 
+    This was the original approach for extracting features from a limited number of MIDI files for testing purposes.
+    As the full dataset was approached, it became apparent that processing all files at once was not feasible due to memory constraints.
+    As such, a chunked approach was implemented to handle the full dataset efficiently whilst retaining this one for testing and smaller-scale extractions.
 
-    If the limit is equal to the full size of the dataset, then extraction is performed in parts.
+    If the limit is equal to the full size of the dataset, then extraction is performed in parts by calling `extract_full_in_chunks`.
 
     Args:
         metadata_df (pd.DataFrame): DataFrame containing metadata about the MIDI files, including paths.

@@ -1,5 +1,9 @@
 from pydantic import BaseModel
 
+"""
+This script defines the data models for the music representation learning API using Pydantic.
+"""
+
 
 class Song(BaseModel):
     id: int

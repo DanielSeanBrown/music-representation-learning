@@ -1,1 +1,0 @@
-Contains the zip file as available at: https://colinraffel.com/projects/lmd/

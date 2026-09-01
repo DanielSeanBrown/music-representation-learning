@@ -6,15 +6,10 @@ def hist_entropy(values: np.ndarray) -> float:
     if len(values) == 0:
         return 0
     
-    hist, _ = np.histogram(
-        values,
-        bins=20
-    )
+    hist, _ = np.histogram(values, bins=20)
 
-    hist = (
-        hist /
-        (hist.sum() + 1e-9)
-    )
+    # Normalise 
+    hist = (hist /(hist.sum() + 1e-9))
 
     return entropy(hist)
 
@@ -26,9 +21,7 @@ def extract_entropy_features(song: dict) -> dict:
         ioi_entropy        float - Entropy of the inter-onset interval distribution
     """
 
-    iois = np.diff(
-        np.sort(song["starts"])
-    )
+    iois = np.diff(np.sort(song["starts"]))
 
     return {
         "pitch_entropy": hist_entropy(song["pitches"]),

@@ -1,7 +1,15 @@
 import numpy as np
 
 def estimate_key(chroma: np.ndarray) -> tuple[str, list[float, float], float]:
-    """Given a 12D chroma vector, estimate the key and return cyclical key encoding."""
+    """Given a 12D chroma vector, estimate the key and return cyclical key encoding.
+    A simple implementation of the Krumhansl-Schmuckler key-finding algorithm.
+    
+    Args:
+        chroma (np.ndarray): 12D chroma vector representing the pitch class distribution.
+
+    Returns:
+        tuple[str, list[float, float], float]: Estimated key, cyclical key encoding, and key strength.
+    """
 
     major_profile = np.array([6.35,2.23,3.48,2.33,4.38,4.09,
                               2.52,5.19,2.39,3.66,2.29,2.88])
@@ -99,13 +107,10 @@ def extract_chroma_features(song: dict) -> dict:
 
 
     return {
-
         "low_chroma": low_chroma.tolist(),
         "mid_chroma": mid_chroma.tolist(),
         "high_chroma": high_chroma.tolist(),
-
         "total_chroma": total_chroma.tolist(),
-
         "key": key,
         "key_distance": key_distance,
         "key_strength": key_strength

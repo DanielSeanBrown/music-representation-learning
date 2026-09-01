@@ -37,10 +37,7 @@ const WEIGHT_LABELS = {
 };
 
 
-
-
 function App() {
-
 // Serach functionality
   const [query, setQuery] = useState("");
   const [searchMode, setSearchMode] = useState("title");

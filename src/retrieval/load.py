@@ -17,72 +17,35 @@ FEATURE_GROUPS = [
 
 
 def load_data():
+    """Loads the metadata, weighted embeddings, FAISS index, and unweighted feature groups from the processed data directory.
+    This function is used for the fastapi app to load the data for the music explorer.
+    
+    Returns:
+        metadata (pd.DataFrame): The metadata dataframe.
+        weighted_embeddings (np.ndarray): The weighted embeddings array.
+        index (faiss.Index): The FAISS index.
+        unweighted_embeddings (dict): The unweighted feature groups as a dictionary."""
 
-    # ==============================================================
-    # METADATA
-    # ==============================================================
+    metadata = pd.read_csv("data/processed/metadata_index_reprocessed.csv")
+    weighted_embeddings = np.load("data/processed/all_features_limit_31034_embeddings.npy").astype("float32")
+    index = faiss.read_index("data/processed/all_features_limit_31034_index.index")
 
-    metadata = pd.read_csv(
-        "data/processed/metadata_index_reprocessed.csv"
-    )
+    loaded = np.load("data/processed/unweighted_features_limit_31034.npz")
 
-
-    # ==============================================================
-    # DEFAULT WEIGHTED EMBEDDINGS
-    # ==============================================================
-
-    embeddings = np.load(
-        "data/processed/all_features_limit_31034_embeddings.npy"
-    ).astype(
-        "float32"
-    )
-
-
-    # ==============================================================
-    # DEFAULT FAISS INDEX
-    # ==============================================================
-
-    index = faiss.read_index(
-        "data/processed/all_features_limit_31034_index.index"
-    )
-
-
-    # ==============================================================
-    # UNWEIGHTED FEATURE GROUPS
-    # ==============================================================
-
-    unweighted_path = (
-        "data/processed/unweighted_features_limit_31034.npz"
-    )
-
-    loaded = np.load(
-        unweighted_path
-    )
-
-    unweighted_features = {
-
+    unweighted_embeddings = {
         name:
             loaded[name].astype(
                 np.float32,
                 copy=False,
             )
-
         for name in FEATURE_GROUPS
-
-        if name in loaded.files
-
     }
 
 
 
-
-    # ==============================================================
-    # RETURN
-    # ==============================================================
-
     return (
         metadata,
-        embeddings,
+        weighted_embeddings,
         index,
-        unweighted_features,
+        unweighted_embeddings
     )

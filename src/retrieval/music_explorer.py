@@ -61,7 +61,7 @@ class MusicExplorer:
         self.custom_weights = self.DEFAULT_WEIGHTS.copy()
         self.unweighted_features = unweighted_features
 
-        self.index = index # this is the active index, either default or custom
+        self.index = index # this is the active index, it is the provided default index at initialization, but can be switched to a custom one.
         self.mode = "default"
 
 

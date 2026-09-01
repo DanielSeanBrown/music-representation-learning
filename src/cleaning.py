@@ -5,6 +5,8 @@ from tqdm import tqdm
 
 from src.config.paths import PROCESSED_DATA_DIR
 
+from src.produce_file_index import extract_metadata
+
 
 def clean_features():
     """Clean the extracted features by removing duplicate songs.
@@ -15,7 +17,7 @@ def clean_features():
     if metadata_path.exists():
         metadata_df = pd.read_csv(metadata_path)
     else:
-        reprocess_metadata()
+        extract_metadata()
         metadata_df = pd.read_csv(metadata_path)
 
     metadata_df["_artist_clean"] = metadata_df["artist_name"].fillna("").astype(str).str.strip().str.casefold()

@@ -23,11 +23,17 @@ def clean_features():
     
     duplicate_tracks = set(metadata_df.loc[metadata_df[["_title_clean", "_artist_clean"]].duplicated(keep="first"),"track_id"])
 
+    logger.debug(f"Found {len(duplicate_tracks)} duplicate tracks to remove.")
+
     chunk_paths = list((PROCESSED_DATA_DIR / "full_extraction_parts").glob("similarity_features_*.parquet"))
 
     for chunk_path in tqdm(chunk_paths, desc="Cleaning features"):
         chunk_df = pd.read_parquet(chunk_path)
+
+        logger.debug(f"Cleaning chunk {chunk_path} with {len(chunk_df)} tracks before removing duplicates.")
         chunk_df = chunk_df[~chunk_df["track_id"].isin(duplicate_tracks)]
+
+        logger.debug(f"Cleaning chunk {chunk_path} with {len(chunk_df)} tracks after removing duplicates.")
         chunk_df.to_parquet(chunk_path, index=False)
 
 

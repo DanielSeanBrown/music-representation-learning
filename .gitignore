@@ -6,10 +6,13 @@
 
 # Metadata files
 *.h5
+
+# Processed data files
 *.csv
-
-# Feature Dataframes
-*.pkl
-
-# Embeddings
 *.npy
+*.npz
+*.parquet
+
+# Python cache files
+*.pyc
+__pycache__/

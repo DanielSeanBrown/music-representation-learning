@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
     main(        
         force_download = False,
-        force_metadata = False,
+        force_metadata = True,
         force_extraction = True,
         force_embedding = True
     )

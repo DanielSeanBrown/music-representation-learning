@@ -1,0 +1,47 @@
+# Feature Dictionary
+
+This markdown file serves as a reference point for what each feature is, its data type and category.
+
+| Feature Name | Description | Data Type | Category |
+|--------------|-------------|-----------|----------|
+|note_count      |  Total number of notes in the song.              |  int64| Basic Descriptive|
+|mean_pitch      |  Mean pitch of the notes in the song.              |float64| Basic Descriptive|
+|std_pitch       |  Standard deviation of the pitches in the song.              |float64| Basic Descriptive|
+|pitch_range     |  Range of pitches (max - min) in the song.              |  int64| Basic Descriptive|
+|mean_duration   |  Mean duration of the notes in the song.              |float64| Basic Descriptive|
+|std_duration    |  Standard deviation of the durations in the song.              |float64| Basic Descriptive|
+|mean_velocity   |  Mean velocity of the notes in the song.              |float64| Basic Descriptive|
+|std_velocity    |  Standard deviation of the velocities in the song.              |float64| Basic Descriptive|
+|num_files       |  Number of files in the song.              |  int64| Basic Descriptive|
+|mean_instruments|  Mean number of instruments used across the files in the song.              |float64| Basic Descriptive|
+|low_chroma      |  12D normalised chroma vector for low pitches| list | Chroma|
+|mid_chroma      |  12D normalised chroma vector for mid pitches| list | Chroma|
+|high_chroma     |  12D normalised chroma vector for high pitches| list | Chroma|
+|total_chroma    |  12D normalised chroma vector for all pitches| list | Chroma|
+|key             |  Estimated key of the song using a simple Krumhansl-Schmuckler-style correlation method| string | Chroma|
+|key_distance    |  Cyclical encoding of the key | list | Chroma
+|key_strength    |  Strength of the estimated key (correlation score)| float | Chroma|
+|pitch_entropy   |  Shannon entropy of the pitch distribution (histogram)| float | Entropy |
+|duration_entropy|  Shannon entropy of the duration distribution (histogram)| float | Entropy |
+|ioi_entropy     |  Shannon entropy of the inter-onset interval distribution (histogram)| float | Entropy |
+|melody_intervals|  Intervals of the melody| list| Melody|
+|melody_ngrams   |  N-grams of the melody intervals| dict| Melody|
+|low_intervals   |  Intervals of the low part| list| Melody|
+|low_ngrams      |  N-grams of the low part| dict| Melody|
+|mid_intervals   |  Intervals of the mid part| list| Melody|
+|mid_ngrams      |  N-grams of the mid part| dict| Melody|
+|high_intervals  |  Intervals of the high part| list| Melody|
+|high_ngrams     |  N-grams of the high part| dict| Melody|
+|ioi_hist        |  Histogram of inter-onset intervals|list | Rhythm|
+|duration_hist   |  Histogram of note durations|list | Rhythm|
+|drum_ioi_hist   |  Histogram of drum inter-onset intervals|list | Rhythm|
+|bass_ioi_hist   |  Histogram of bass inter-onset intervals|list | Rhythm|
+|melody_ioi_hist |  Histogram of melody inter-onset intervals|list | Rhythm|
+|density         |  Density of notes per unit time|float| Rhythm|
+|drum_density    |  Density of drum notes per unit time|float| Rhythm|
+|bass_density    |  Density of bass notes per unit time|float| Rhythm|
+|melody_density  |  Density of melody notes per unit time|float| Rhythm|
+|segment_chroma   | Chroma vectors for each segment  |list | Structure|
+|chord_progression| Most prominent pitch class in each segment  |list | Structure|
+|harmonic_rhythm  | Proportion of segments where the chord root changes  |float| Structure|
+|segment_variation| Average variation between consecutive segments  |float| Structure|

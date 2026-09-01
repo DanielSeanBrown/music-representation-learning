@@ -4,7 +4,7 @@ from src.feature_extraction import extract_features
 from src.download import download_files
 from src.embeddings import produce_FAISS_index, produce_embeddings
 from src.cleaning import clean_features, reprocess_metadata
-from src.config.paths import PROCESSED_DATA_DIR, MSD_METADATA_DIR, LMD_MATCHED_DIR, 
+from src.config.paths import PROCESSED_DATA_DIR, MSD_METADATA_DIR, LMD_MATCHED_DIR
 
 from pathlib import Path
 
@@ -42,7 +42,10 @@ def main(
         logger.info("Extracting metadata index from h5 files...")
         extract_metadata()
 
-    if not Path(PROCESSED_DATA_DIR / f"similarity_features_{limit}.parquet").exists() or force_extraction:
+    if not any(
+        Path(PROCESSED_DATA_DIR / f"similarity_features_{limit}.parquet").exists(),
+        Path(PROCESSED_DATA_DIR / "full_extraction_parts" / f"similarity_features_part_28000_31034.parquet").exists(),
+    ) or force_extraction:
 
         logger.info("Extracting features from MIDI files...")
         extract_features(metadata_df=pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv"), limit=limit, save=True)
@@ -53,10 +56,7 @@ def main(
         logger.info("Reprocessing metadata to ensure alignment with extracted features...")
         reprocess_metadata() 
 
-    if not any(
-        Path(PROCESSED_DATA_DIR / f"all_features_limit_{limit}_embeddings.npy").exists(),
-        Path(PROCESSED_DATA_DIR / "full_extraction_parts" / f"similarity_features_part_28000_31034.parquet").exists(),
-     ) or force_embedding:
+    if not Path(PROCESSED_DATA_DIR / f"all_features_limit_{limit}_embeddings.npy").exists() or force_embedding:
 
         logger.info("Producing embeddings from extracted features...")
         produce_embeddings(limit=limit, save=True) 

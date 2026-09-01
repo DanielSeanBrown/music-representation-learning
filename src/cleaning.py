@@ -12,7 +12,7 @@ def clean_features():
     """Clean the extracted features by removing duplicate songs.
     Duplication here refers to a duplicate title and artist combinations and not the track ID."""
 
-    metadata_path = PROCESSED_DATA_DIR / "metadata_index_reprocessed.csv"
+    metadata_path = PROCESSED_DATA_DIR / "metadata_index.csv"
 
     if metadata_path.exists():
         metadata_df = pd.read_csv(metadata_path)

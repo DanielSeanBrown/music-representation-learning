@@ -15,8 +15,5 @@ MSD_METADATA_DIR = DATA_DIR / "midi_metadata"
 # Processed Data
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
-# Notebook datasets
-NOTEBOOK_DATASETS_DIR = PROJECT_ROOT / "notebooks" / "notebook_datasets"
-
 # Unweighted features
 UNWEIGHTED_PATH = PROCESSED_DATA_DIR / "unweighted_features_limit_31034.npz"

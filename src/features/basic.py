@@ -1,5 +1,4 @@
 import numpy as np
-import pandas
 
 def extract_basic_features(song: dict) -> dict:
     """

@@ -136,7 +136,7 @@ def build_feature_groups(row: pd.Series, ngram_vocab: dict, low_vocab: dict ,mid
     ])
 
 
-    melody = vectorise_counter(json.loads(row["melody_ngrams"]),melody_vocab)
+    melody = vectorise_counter(json.loads(row["melody_ngrams"]),ngram_vocab)
     low = vectorise_counter(json.loads(row["low_ngrams"]),low_vocab)
     mid = vectorise_counter(json.loads(row["mid_ngrams"]),mid_vocab)
     high = vectorise_counter(json.loads(row["high_ngrams"]),high_vocab)

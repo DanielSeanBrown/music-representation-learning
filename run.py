@@ -42,10 +42,10 @@ def main(
         logger.info("Extracting metadata index from h5 files...")
         extract_metadata()
 
-    if not any(
+    if not any([
         Path(PROCESSED_DATA_DIR / f"similarity_features_{limit}.parquet").exists(),
         Path(PROCESSED_DATA_DIR / "full_extraction_parts" / f"similarity_features_part_28000_31034.parquet").exists(),
-    ) or force_extraction:
+    ]) or force_extraction:
 
         logger.info("Extracting features from MIDI files...")
         extract_features(metadata_df=pd.read_csv(f"{PROCESSED_DATA_DIR}/metadata_index.csv"), limit=limit, save=True)

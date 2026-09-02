@@ -2,6 +2,7 @@ from collections import Counter
 from pathlib import Path
 
 import faiss
+import json
 import numpy as np
 import pandas as pd
 from loguru import logger
@@ -28,6 +29,7 @@ def process_ngrams(features_df: pd.DataFrame, col: str, top_n: int = 500,) -> di
     counts = Counter()
 
     for ngrams in features_df[col]:
+        ngrams = json.loads(ngrams)
         counts.update(ngrams.keys())
 
     vocab = {
@@ -98,12 +100,12 @@ def build_feature_groups(row: pd.Series, ngram_vocab: dict, low_vocab: dict ,mid
     ], dtype=np.float32)
 
     chroma = np.concatenate([
-        np.asarray(row["total_chroma"],dtype=np.float32),
-        np.asarray(row["low_chroma"],dtype=np.float32),
-        np.asarray(row["mid_chroma"],dtype=np.float32),
-        np.asarray(row["high_chroma"],dtype=np.float32),
+        np.asarray(json.loads(row["total_chroma"]),dtype=np.float32),
+        np.asarray(json.loads(row["low_chroma"]),dtype=np.float32),
+        np.asarray(json.loads(row["mid_chroma"]),dtype=np.float32),
+        np.asarray(json.loads(row["high_chroma"]),dtype=np.float32),
         np.asarray([row["key_strength"]],dtype=np.float32),
-        np.asarray(row["key_distance"],dtype=np.float32),
+        np.asarray(json.loads(row["key_distance"]),dtype=np.float32),
     ])
 
     entropy = np.array([
@@ -114,11 +116,11 @@ def build_feature_groups(row: pd.Series, ngram_vocab: dict, low_vocab: dict ,mid
 
 
     rhythm = np.concatenate([
-        np.asarray( row["ioi_hist"], dtype=np.float32),
-        np.asarray( row["duration_hist"], dtype=np.float32),
-        np.asarray( row["drum_ioi_hist"], dtype=np.float32),
-        np.asarray( row["bass_ioi_hist"], dtype=np.float32),
-        np.asarray(row["melody_ioi_hist"], dtype=np.float32),
+        np.asarray( json.loads(row["ioi_hist"]), dtype=np.float32),
+        np.asarray( json.loads(row["duration_hist"]), dtype=np.float32),
+        np.asarray( json.loads(row["drum_ioi_hist"]), dtype=np.float32),
+        np.asarray( json.loads(row["bass_ioi_hist"]), dtype=np.float32),
+        np.asarray(json.loads(row["melody_ioi_hist"]), dtype=np.float32),
         np.asarray([row["density"]],dtype=np.float32),
         np.asarray([row["drum_density"]],dtype=np.float32),
         np.asarray([row["bass_density"]],dtype=np.float32,),
@@ -127,17 +129,17 @@ def build_feature_groups(row: pd.Series, ngram_vocab: dict, low_vocab: dict ,mid
 
 
     structure = np.concatenate([
-        np.asarray(row["segment_chroma"],dtype=np.float32).flatten(),
-        np.asarray(row["chord_progression"],dtype=np.float32),
+        np.asarray(json.loads(row["segment_chroma"]),dtype=np.float32).flatten(),
+        np.asarray(json.loads(row["chord_progression"]),dtype=np.float32),
         np.asarray([row["harmonic_rhythm"]],dtype=np.float32),
         np.asarray([row["segment_variation"]],dtype=np.float32),
     ])
 
 
-    melody = vectorise_counter(row["melody_ngrams"],ngram_vocab)
-    low = vectorise_counter(row["low_ngrams"],low_vocab)
-    mid = vectorise_counter(row["mid_ngrams"],mid_vocab)
-    high = vectorise_counter(row["high_ngrams"],high_vocab)
+    melody = vectorise_counter(json.loads(row["melody_ngrams"]),melody_vocab)
+    low = vectorise_counter(json.loads(row["low_ngrams"]),low_vocab)
+    mid = vectorise_counter(json.loads(row["mid_ngrams"]),mid_vocab)
+    high = vectorise_counter(json.loads(row["high_ngrams"]),high_vocab)
 
 
     return {
@@ -405,7 +407,7 @@ def produce_embeddings(
     limit: int = 30,
     weights: dict = None,
     save: bool = True,
-    save_unweighted = False
+    save_unweighted = True
 ) -> pd.DataFrame:
     """
     Produce weighted embeddings.
@@ -415,7 +417,7 @@ def produce_embeddings(
         limit (int): Limit for the number of features to consider. Defaults to 30. 
         weights (dict): Dictionary containing the weights for each feature group. If None, default weights will be used.
         save (bool): Whether to save the embeddings to a numpy file. Defaults to True.
-        save_unweighted (bool): Weather to save the unweighted embeddings to a numpy file. Defaults to False.
+        save_unweighted (bool): Weather to save the unweighted embeddings to a numpy file. Defaults to True.
     
     Returns:
         embeddings_df (pd.DataFrame): DataFrame containing the embeddings,
@@ -441,13 +443,13 @@ def produce_embeddings(
             weights = {
                 "stats": 1.0,
                 "chroma": 1.0,
-                "entropy": 0.5,
+                "entropy": 1.0,
                 "rhythm": 1.0,
-                "structure": 0.5,
-                "melody": 0.5,
-                "low": 0.5,
-                "mid": 0.5,
-                "high": 0.5,
+                "structure": 1.0,
+                "melody": 1.0,
+                "low": 1.0,
+                "mid": 1.0,
+                "high": 1.0
             }
 
     if limit == 31034:

@@ -435,8 +435,15 @@ def produce_embeddings(
     if weights is None:
         if (PROCESSED_DATA_DIR / "best_weighting_limit_31034.parquet").exists():
             logger.info("Loading best weighting from previous evaluation...")
+            
             best_weighting_df = pd.read_parquet(PROCESSED_DATA_DIR / "best_weighting_limit_31034.parquet")
-            best_weighting = best_weighting_df.loc[0, [col for col in best_weighting_df.columns if "weight" in col]].to_dict()
+            best_weight = best_weighting_df.loc[0,[col for col in best_weighting_df.columns if col.startswith("weight_")]].to_dict()
+            
+            best_weighting = {}
+            for column, value in best_weight.items():
+                feature_name = column.replace("weight_", "")
+                best_weighting[feature_name] = value
+
             weights = best_weighting
         else:
             logger.warning("Weight evaluation results not found. Using default weights.")

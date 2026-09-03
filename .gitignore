@@ -15,7 +15,7 @@
 
 # Python cache files
 *.pyc
-*__pycache__/
+__pycache__/
 
 # Generated Frontend Assests
 *.svg
